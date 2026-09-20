@@ -168,7 +168,7 @@ export default function App() {
         )}
 
         <p className="fineprint">
-          Distances are straight-line, not train times, so check your route before you leave. Station data from the MTA via NY Open Data. Not affiliated with the MTA.
+         Made by Prachi Patel. Distances are straight-line, not train times, so check your route before you leave. Station data from the MTA via NY Open Data. Not affiliated with the MTA.
         </p>
       </div>
 
