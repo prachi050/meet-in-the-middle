@@ -10,9 +10,9 @@ import NetworkMap from "./components/NetworkMap.jsx";
 const BY_ID = new Map(STATIONS.map((s) => [s.id, s]));
 const INDEX = buildIndex(STATIONS);
 const MAX_FRIENDS = 4;
-const EXAMPLE_IDS = [616, 39]; // Jackson Heights and Bay Ridge
+const EXAMPLE_IDS = [616, 39]; 
 
-// A shared link looks like  #616-39  (station IDs, in order).
+
 function picksFromHash() {
   const ids = window.location.hash.slice(1).split("-").map(Number).filter((n) => BY_ID.has(n));
   const picks = ids.slice(0, MAX_FRIENDS).map((id) => BY_ID.get(id));
@@ -32,11 +32,11 @@ export default function App() {
 
   const spots = useMemo(
     () => (friends.length >= 2 ? rankSpots(STATIONS, friends.map((f) => f.station)) : []),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+   
     [friendKey]
   );
 
-  // Keep the address bar in sync so the page is always a shareable link.
+ 
   useEffect(() => {
     const url = window.location.pathname + window.location.search + (friendKey ? `#${friendKey}` : "");
     window.history.replaceState(null, "", url);
