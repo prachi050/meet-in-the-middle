@@ -27,7 +27,7 @@ button, input { font: inherit; color: inherit; }
 
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
 
-/* ---------- Layout (one column on phones, two on desktop) ---------- */
+
 .page {
   display: grid;
   gap: 40px;
@@ -53,7 +53,7 @@ button, input { font: inherit; color: inherit; }
   .col-right { position: sticky; top: 28px; align-self: start; }
 }
 
-/* ---------- Hero ---------- */
+
 .hero h1 {
   font-size: clamp(2.9rem, 11vw, 4.6rem);
   font-weight: 800;
@@ -64,7 +64,7 @@ button, input { font: inherit; color: inherit; }
 }
 .lede { font-size: 1.2rem; max-width: 34ch; color: #222; }
 
-/* ---------- Friend inputs ---------- */
+
 .who { margin-top: 36px; }
 .who h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 14px; }
 
@@ -107,7 +107,7 @@ button, input { font: inherit; color: inherit; }
 
 .who-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
 
-/* ---------- Buttons ---------- */
+
 .btn {
   padding: 11px 20px;
   border: 2px solid var(--ink);
@@ -124,7 +124,7 @@ button, input { font: inherit; color: inherit; }
 .btn-outline-light:hover { background: #fff; color: #000; }
 .text-btn { padding: 8px 4px; border: 0; background: none; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 
-/* ---------- Result: a station sign ---------- */
+
 .result { margin-top: 32px; }
 
 .sign {
@@ -176,7 +176,7 @@ button, input { font: inherit; color: inherit; }
 
 .fineprint { max-width: 46ch; margin-top: 32px; font-size: 0.85rem; color: var(--muted); }
 
-/* ---------- Line bullets and person badges ---------- */
+
 .bullets { display: inline-flex; flex-wrap: wrap; gap: 4px; }
 .bullet {
   display: inline-grid;
@@ -195,7 +195,7 @@ button, input { font: inherit; color: inherit; }
 
 .person { display: inline-grid; place-items: center; flex: none; border-radius: 30%; }
 
-/* ---------- Map ---------- */
+
 .map { display: block; width: 100%; aspect-ratio: 1; border: 2px solid var(--ink); border-radius: 24px; background: #fff; }
 .map-label { fill: #000; stroke: #fff; paint-order: stroke; font-family: var(--ui-font); font-weight: 700; stroke-linejoin: round; }
 .map-label-strong { font-weight: 800; }
