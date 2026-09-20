@@ -1,0 +1,25 @@
+// Official MTA line colors.
+export const LINE_COLORS = {
+  1: "#EE352E", 2: "#EE352E", 3: "#EE352E",
+  4: "#00933C", 5: "#00933C", 6: "#00933C",
+  7: "#B933AD",
+  A: "#0039A6", C: "#0039A6", E: "#0039A6",
+  B: "#FF6319", D: "#FF6319", F: "#FF6319", M: "#FF6319",
+  G: "#6CBE45",
+  J: "#996633", Z: "#996633",
+  L: "#A7A9AC",
+  N: "#FCCC0A", Q: "#FCCC0A", R: "#FCCC0A", W: "#FCCC0A",
+  S: "#808183",
+  SIR: "#0039A6",
+};
+
+// Light bullets need dark text to stay readable.
+const DARK_TEXT = new Set(["G", "L", "N", "Q", "R", "W"]);
+
+export const bulletColor = (route) => LINE_COLORS[route] ?? "#808183";
+export const bulletText = (route) => (DARK_TEXT.has(route) ? "#000000" : "#FFFFFF");
+
+export const BOROUGHS = { M: "Manhattan", Bk: "Brooklyn", Q: "Queens", Bx: "The Bronx", SI: "Staten Island" };
+
+// One color per friend. Kept different from the line bullets by using a rounded-square person badge.
+export const FRIEND_COLORS = ["#FF4D6D", "#2F6BFF", "#12A37F", "#FF9F1C"];
