@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import STATIONS from "./lib/stations.json";
+import SUBWAY_STATIONS from "./lib/stations.json";
+import PATH_STATIONS from "./lib/path_stations.json";
 import { buildIndex } from "./lib/search.js";
 import { formatMiles, rankSpots } from "./lib/geo.js";
 import { BOROUGHS, FRIEND_COLORS } from "./lib/lines.js";
@@ -7,36 +8,44 @@ import { Bullets, PersonBadge } from "./components/Bullet.jsx";
 import StationPicker from "./components/StationPicker.jsx";
 import NetworkMap from "./components/NetworkMap.jsx";
 
+
+const STATIONS = [...SUBWAY_STATIONS, ...PATH_STATIONS];
 const BY_ID = new Map(STATIONS.map((s) => [s.id, s]));
 const INDEX = buildIndex(STATIONS);
 const MAX_FRIENDS = 4;
-const EXAMPLE_IDS = [616, 39]; 
+const EXAMPLE_IDS = [616, 39];
 
 
-function picksFromHash() {
-  const ids = window.location.hash.slice(1).split("-").map(Number).filter((n) => BY_ID.has(n));
+function parseHash() {
+  const raw = window.location.hash.slice(1);
+  const [friendPart, destPart] = raw.split("_d");
+  const ids = friendPart.split("-").map(Number).filter((n) => BY_ID.has(n));
   const picks = ids.slice(0, MAX_FRIENDS).map((id) => BY_ID.get(id));
   while (picks.length < 2) picks.push(null);
-  return picks;
+  const destId = Number(destPart);
+  const destination = BY_ID.has(destId) ? BY_ID.get(destId) : null;
+  return { picks, destination };
 }
 
 const friendName = (i) => (i === 0 ? "You" : `Friend ${i + 1}`);
 
 export default function App() {
-  const [picks, setPicks] = useState(picksFromHash);
+  const initial = useMemo(parseHash, []);
+  const [picks, setPicks] = useState(initial.picks);
+  const [destination, setDestination] = useState(initial.destination);
   const [activeSpot, setActiveSpot] = useState(0);
   const [copied, setCopied] = useState(false);
 
   const friends = picks.map((station, idx) => ({ station, idx, name: friendName(idx) })).filter((f) => f.station);
-  const friendKey = friends.map((f) => f.station.id).join("-");
+  const friendKey = friends.map((f) => f.station.id).join("-") + (destination ? `_d${destination.id}` : "");
 
   const spots = useMemo(
-    () => (friends.length >= 2 ? rankSpots(STATIONS, friends.map((f) => f.station)) : []),
-   
+    () => (friends.length >= 2 ? rankSpots(STATIONS, friends.map((f) => f.station), 3, destination) : []),
+
     [friendKey]
   );
 
- 
+
   useEffect(() => {
     const url = window.location.pathname + window.location.search + (friendKey ? `#${friendKey}` : "");
     window.history.replaceState(null, "", url);
@@ -69,12 +78,21 @@ export default function App() {
 
   const best = spots[activeSpot];
 
+  const coffeeLink = (station, query) =>
+    `https://www.google.com/maps/search/${encodeURIComponent(query)}/@${station.lat},${station.lon},16z`;
+
+  const COFFEE_TYPES = [
+    { label: "Local & indie", query: "independent coffee shop" },
+    { label: "Everyday cafe", query: "coffee shop" },
+    { label: "High-end / specialty", query: "specialty coffee roastery" },
+  ];
+
   return (
     <main className="page">
       <div className="col-left">
         <header className="hero">
           <h1>Meet in the middle.</h1>
-          <p className="lede">Add where everyone is coming from. We'll find the subway station that's fairest for the group.</p>
+          <p className="lede">Add where everyone is coming from, subway or PATH. We'll find the station that's fairest for the group, or the one closest to wherever you're headed next.</p>
         </header>
 
         <section className="who" aria-labelledby="who-title">
@@ -103,6 +121,24 @@ export default function App() {
           </div>
         </section>
 
+        <section className="destination" aria-labelledby="destination-title">
+          <h2 id="destination-title">Going somewhere after? (optional)</h2>
+          <StationPicker
+            label="Destination"
+            color="#333333"
+            station={destination}
+            searchIndex={INDEX}
+            onSelect={(s) => setDestination(s)}
+            onRemove={() => setDestination(null)}
+            canRemove={!!destination}
+          />
+          {destination && (
+            <p className="destination-note">
+              We'll favor meeting spots that are also close to {destination.name}, so the group can head there together.
+            </p>
+          )}
+        </section>
+
         <section className="result" aria-live="polite">
           {best ? (
             <>
@@ -121,6 +157,13 @@ export default function App() {
                       <span className="dists-mi">{formatMiles(best.distances[k])}</span>
                     </li>
                   ))}
+                  {destination && (
+                    <li>
+                      <PersonBadge color="#333333" size={26} />
+                      <span className="dists-name">To {destination.name}</span>
+                      <span className="dists-mi">{formatMiles(best.toDestination)}</span>
+                    </li>
+                  )}
                 </ul>
                 <div className="sign-actions">
                   <button type="button" className="btn btn-light" onClick={copyLink}>
@@ -131,6 +174,23 @@ export default function App() {
                       Share
                     </button>
                   )}
+                </div>
+
+                <div className="coffee">
+                  <p className="coffee-label">Grab coffee nearby</p>
+                  <div className="coffee-links">
+                    {COFFEE_TYPES.map((c) => (
+                      <a
+                        key={c.label}
+                        className="coffee-chip"
+                        href={coffeeLink(best.station, c.query)}
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        {c.label}
+                      </a>
+                    ))}
+                  </div>
                 </div>
               </div>
 
@@ -157,6 +217,7 @@ export default function App() {
                         <span className="other-meta">
                           <Bullets routes={sp.station.routes} size="sm" />
                           <span>Farthest friend {formatMiles(sp.max)}</span>
+                          {destination && <span>&middot; {formatMiles(sp.toDestination)} to {destination.name}</span>}
                         </span>
                       </span>
                     </button>
@@ -168,7 +229,7 @@ export default function App() {
         )}
 
         <p className="fineprint">
-         Made by Prachi Patel. Distances are straight-line, not train times, so check your route before you leave. Station data from the MTA via NY Open Data. Not affiliated with the MTA.
+         Made by Prachi Patel. Distances are straight-line, not train times, so check your route before you leave. Subway data from the MTA via NY Open Data; PATH stations added separately. Not affiliated with the MTA or the Port Authority.
         </p>
       </div>
 
