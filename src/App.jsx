@@ -1,3 +1,4 @@
+
 import { useEffect, useMemo, useState } from "react";
 import SUBWAY_STATIONS from "./lib/stations.json";
 import PATH_STATIONS from "./lib/path_stations.json";
@@ -6,6 +7,7 @@ import { formatMiles, rankSpots } from "./lib/geo.js";
 import { BOROUGHS, FRIEND_COLORS } from "./lib/lines.js";
 import { Bullets, PersonBadge } from "./components/Bullet.jsx";
 import StationPicker from "./components/StationPicker.jsx";
+import PlacePicker from "./components/PlacePicker.jsx";
 import NetworkMap from "./components/NetworkMap.jsx";
 
 
@@ -22,9 +24,22 @@ function parseHash() {
   const ids = friendPart.split("-").map(Number).filter((n) => BY_ID.has(n));
   const picks = ids.slice(0, MAX_FRIENDS).map((id) => BY_ID.get(id));
   while (picks.length < 2) picks.push(null);
-  const destId = Number(destPart);
-  const destination = BY_ID.has(destId) ? BY_ID.get(destId) : null;
+
+  let destination = null;
+  if (destPart) {
+    const [latStr, lonStr, ...nameParts] = destPart.split(",");
+    const lat = parseFloat(latStr);
+    const lon = parseFloat(lonStr);
+    if (Number.isFinite(lat) && Number.isFinite(lon)) {
+      destination = { lat, lon, name: decodeURIComponent(nameParts.join(",") || "your destination") };
+    }
+  }
   return { picks, destination };
+}
+
+function encodeDestination(destination) {
+  if (!destination) return "";
+  return `_d${destination.lat.toFixed(5)},${destination.lon.toFixed(5)},${encodeURIComponent(destination.name)}`;
 }
 
 const friendName = (i) => (i === 0 ? "You" : `Friend ${i + 1}`);
@@ -37,7 +52,7 @@ export default function App() {
   const [copied, setCopied] = useState(false);
 
   const friends = picks.map((station, idx) => ({ station, idx, name: friendName(idx) })).filter((f) => f.station);
-  const friendKey = friends.map((f) => f.station.id).join("-") + (destination ? `_d${destination.id}` : "");
+  const friendKey = friends.map((f) => f.station.id).join("-") + encodeDestination(destination);
 
   const spots = useMemo(
     () => (friends.length >= 2 ? rankSpots(STATIONS, friends.map((f) => f.station), 3, destination) : []),
@@ -123,12 +138,11 @@ export default function App() {
 
         <section className="destination" aria-labelledby="destination-title">
           <h2 id="destination-title">Going somewhere after? (optional)</h2>
-          <StationPicker
+          <PlacePicker
             label="Destination"
             color="#333333"
-            station={destination}
-            searchIndex={INDEX}
-            onSelect={(s) => setDestination(s)}
+            place={destination}
+            onSelect={(p) => setDestination(p)}
             onRemove={() => setDestination(null)}
             canRemove={!!destination}
           />
