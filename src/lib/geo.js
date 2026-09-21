@@ -1,7 +1,8 @@
+
 const EARTH_RADIUS_MI = 3958.8;
 const rad = (d) => (d * Math.PI) / 180;
 
-// Straight-line ("as the crow flies") distance in miles.
+
 export function haversine(a, b) {
   const dLat = rad(b.lat - a.lat);
   const dLon = rad(b.lon - a.lon);
@@ -11,16 +12,16 @@ export function haversine(a, b) {
   return 2 * EARTH_RADIUS_MI * Math.asin(Math.sqrt(h));
 }
 
-// Score every station by how far the farthest friend would travel (fairness),
-// with a small weight on the average distance as a tie-breaker.
-// Then keep the best few that are not right next to each other.
-export function rankSpots(stations, friendStations, howMany = 3) {
+
+export function rankSpots(stations, friendStations, howMany = 3, destination = null) {
   const scored = stations
     .map((station) => {
       const distances = friendStations.map((f) => haversine(station, f));
       const max = Math.max(...distances);
       const mean = distances.reduce((sum, d) => sum + d, 0) / distances.length;
-      return { station, distances, max, mean, score: max + 0.35 * mean };
+      const toDestination = destination ? haversine(station, destination) : null;
+      const score = max + 0.35 * mean + (destination ? 0.25 * toDestination : 0);
+      return { station, distances, max, mean, toDestination, score };
     })
     .sort((a, b) => a.score - b.score);
 
