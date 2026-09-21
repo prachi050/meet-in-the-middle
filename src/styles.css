@@ -1,3 +1,4 @@
+
 :root {
   --ink: #000;
   --paper: #fff;
@@ -109,6 +110,7 @@ button, input { font: inherit; color: inherit; }
 .option-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px; margin-top: 3px; font-size: 0.85rem; color: var(--muted); }
 
 .picker-picked { display: flex; align-items: center; gap: 8px; margin: 8px 0 0 52px; font-size: 0.9rem; color: var(--muted); }
+.picker-status { margin: 6px 0 0; padding: 8px 10px; font-size: 0.9rem; color: var(--muted); }
 
 .who-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
 
