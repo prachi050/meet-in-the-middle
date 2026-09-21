@@ -1,0 +1,15 @@
+[
+  { "id": 90001, "name": "Newark Penn Station", "display": "Newark Penn Station (PATH)", "borough": "NJ", "routes": ["PATH"], "lat": 40.73472, "lon": -74.16417 },
+  { "id": 90002, "name": "Harrison", "display": "Harrison (PATH)", "borough": "NJ", "routes": ["PATH"], "lat": 40.739187, "lon": -74.155425 },
+  { "id": 90003, "name": "Journal Square", "display": "Journal Square (PATH)", "borough": "NJ", "routes": ["PATH"], "lat": 40.732141, "lon": -74.063114 },
+  { "id": 90004, "name": "Grove St", "display": "Grove St (PATH)", "borough": "NJ", "routes": ["PATH"], "lat": 40.719671, "lon": -74.043117 },
+  { "id": 90005, "name": "Exchange Place", "display": "Exchange Place (PATH)", "borough": "NJ", "routes": ["PATH"], "lat": 40.7162, "lon": -74.032981 },
+  { "id": 90006, "name": "Newport", "display": "Newport (PATH)", "borough": "NJ", "routes": ["PATH"], "lat": 40.726676, "lon": -74.034757 },
+  { "id": 90007, "name": "Hoboken", "display": "Hoboken (PATH)", "borough": "NJ", "routes": ["PATH"], "lat": 40.735, "lon": -74.0275 },
+  { "id": 90008, "name": "Christopher St", "display": "Christopher St (PATH)", "borough": "M", "routes": ["PATH"], "lat": 40.733602, "lon": -74.006821 },
+  { "id": 90009, "name": "9th St", "display": "9th St (PATH)", "borough": "M", "routes": ["PATH"], "lat": 40.7341, "lon": -73.9997 },
+  { "id": 90010, "name": "14th St", "display": "14th St (PATH)", "borough": "M", "routes": ["PATH"], "lat": 40.737393, "lon": -73.996862 },
+  { "id": 90011, "name": "23rd St", "display": "23rd St (PATH)", "borough": "M", "routes": ["PATH"], "lat": 40.742893, "lon": -73.992865 },
+  { "id": 90012, "name": "33rd St", "display": "33rd St (PATH)", "borough": "M", "routes": ["PATH"], "lat": 40.749111, "lon": -73.98824 },
+  { "id": 90013, "name": "World Trade Center", "display": "World Trade Center (PATH)", "borough": "M", "routes": ["PATH"], "lat": 40.7115, "lon": -74.0114 }
+]
